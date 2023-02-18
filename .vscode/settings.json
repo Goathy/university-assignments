@@ -1,0 +1,14 @@
+{
+    "go.inlayHints.constantValues": true,
+    "go.inlayHints.rangeVariableTypes": true,
+    "go.inlayHints.assignVariableTypes": true,
+    "go.inlayHints.compositeLiteralTypes": true,
+    "go.inlayHints.compositeLiteralFields": true,
+    "go.inlayHints.functionTypeParameters": true,
+    "go.inlayHints.parameterNames": true,
+    "editor.formatOnSave": true,
+    "go.testOnSave": true,
+    "gopls": {
+        "ui.semanticTokens": true
+    }
+}
