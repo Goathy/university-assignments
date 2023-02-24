@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Goathy/university-assignments/assignment_1.2/internal/figures"
 	"github.com/Goathy/university-assignments/assignment_1.2/internal/figures/circle"
 	"github.com/Goathy/university-assignments/assignment_1.2/internal/figures/rectangle"
 	"github.com/Goathy/university-assignments/assignment_1.2/internal/figures/trapezoid"
@@ -32,10 +33,6 @@ var (
 	regexPositiveIntCompiled   = regexp.MustCompile(regexPositiveInt)
 	regexPositiveFloatCompiled = regexp.MustCompile(regexPositiveFloat)
 )
-
-type figure interface {
-	Area() float64
-}
 
 type application struct {
 	scanner bufio.Scanner
@@ -80,7 +77,7 @@ func (app *application) validateMenu(option string) (string, error) {
 	return option, nil
 }
 
-func (app *application) handle(option string) (figure, error) {
+func (app *application) handle(option string) (figures.Figure, error) {
 	switch option {
 	case "1":
 		params, err := app.handleInput([]string{"a"})
