@@ -11,5 +11,5 @@ func New(r float64) *circle {
 }
 
 func (c *circle) Area() float64 {
-	return math.Pi * c.r
+	return math.Pi * c.r * c.r
 }

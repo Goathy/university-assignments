@@ -13,14 +13,14 @@ func TestCircle(t *testing.T) {
 		want float64
 	}{
 		{
-			desc: "Area of 6 should be 18.84955592153876",
+			desc: "Area of 6 should be 113.09733552923255",
 			r:    6,
-			want: 18.84955592153876,
+			want: 113.09733552923255,
 		},
 		{
-			desc: "Area of 2.2 should be 6.911503837897546",
+			desc: "Area of 2.2 should be 15.205308443374602",
 			r:    2.2,
-			want: 6.911503837897546,
+			want: 15.205308443374602,
 		},
 	}
 	for _, tc := range tt {
