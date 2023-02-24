@@ -22,6 +22,14 @@ const (
 	regexPositiveFloat = `^[0-9](\.|\,)[0-9]+$`
 )
 
+const (
+	optSquare = int64(iota) + 1
+	optRectangle
+	optTriangle
+	optCircle
+	optTrapezoid
+)
+
 var (
 	errExit               = errors.New("exit")
 	errProvidedWrongValue = errors.New("provided wrong value")
@@ -47,15 +55,13 @@ func New(stdin io.Reader, stdout io.Writer) *application {
 func (app *application) Run() error {
 	app.menu()
 
-	app.scanner.Scan()
-
-	option, err := app.validateMenu(app.scanner.Text())
+	option, err := app.handleMenu()
 
 	if err != nil {
 		return err
 	}
 
-	fig, err := app.handle(option)
+	figure, err := app.handleFigures(option)
 
 	if errors.Is(err, errExit) {
 		return nil
@@ -65,21 +71,29 @@ func (app *application) Run() error {
 		return err
 	}
 
-	fmt.Fprintf(app.stdout, "Result: %.2f\n", fig.Area())
+	fmt.Fprintf(app.stdout, "Result: %.2f\n", figure.Area())
 	return nil
 }
 
-func (app *application) validateMenu(option string) (string, error) {
-	if !regexMenuCompiled.MatchString(option) {
-		return "", errUnknownOption
+func (app *application) handleMenu() (option int64, error error) {
+	app.scanner.Scan()
+
+	if !regexMenuCompiled.MatchString(app.scanner.Text()) {
+		return 0, errUnknownOption
+	}
+
+	option, err := strconv.ParseInt(app.scanner.Text(), 10, 64)
+
+	if err != nil {
+		return 0, err
 	}
 
 	return option, nil
 }
 
-func (app *application) handle(option string) (figures.Figure, error) {
+func (app *application) handleFigures(option int64) (figures.Figure, error) {
 	switch option {
-	case "1":
+	case optSquare:
 		params, err := app.handleInput([]string{"a"})
 
 		if err != nil {
@@ -87,7 +101,7 @@ func (app *application) handle(option string) (figures.Figure, error) {
 		}
 
 		return rectangle.New(params[0], params[0]), nil
-	case "2":
+	case optRectangle:
 		params, err := app.handleInput([]string{"a", "b"})
 
 		if err != nil {
@@ -95,7 +109,7 @@ func (app *application) handle(option string) (figures.Figure, error) {
 		}
 
 		return rectangle.New(params[0], params[1]), nil
-	case "3":
+	case optTriangle:
 		params, err := app.handleInput([]string{"a", "h"})
 
 		if err != nil {
@@ -104,7 +118,7 @@ func (app *application) handle(option string) (figures.Figure, error) {
 
 		return triangle.New(params[0], params[1]), nil
 
-	case "4":
+	case optCircle:
 		params, err := app.handleInput([]string{"r"})
 
 		if err != nil {
@@ -112,7 +126,7 @@ func (app *application) handle(option string) (figures.Figure, error) {
 		}
 
 		return circle.New(params[0]), nil
-	case "5":
+	case optTrapezoid:
 		params, err := app.handleInput([]string{"a", "b", "h"})
 
 		if err != nil {
@@ -126,7 +140,6 @@ func (app *application) handle(option string) (figures.Figure, error) {
 }
 
 func (app *application) handleInput(opts []string) (params []float64, err error) {
-
 	for _, option := range opts {
 		fmt.Fprintf(app.stdout, "Provide %s: ", option)
 		app.scanner.Scan()
