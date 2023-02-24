@@ -24,6 +24,7 @@ const (
 var (
 	errExit               = errors.New("exit")
 	errProvidedWrongValue = errors.New("provided wrong value")
+	errUnknownOption      = errors.New("unknown option")
 )
 
 var (
@@ -47,7 +48,7 @@ func New(stdin io.Reader, stdout io.Writer) *application {
 }
 
 func (app *application) Run() error {
-	app.greet()
+	app.menu()
 
 	app.scanner.Scan()
 
@@ -73,7 +74,7 @@ func (app *application) Run() error {
 
 func (app *application) validateMenu(option string) (string, error) {
 	if !regexMenuCompiled.MatchString(option) {
-		return "", errors.New("unknown option")
+		return "", errUnknownOption
 	}
 
 	return option, nil
@@ -156,7 +157,7 @@ func (app *application) handleInput(opts []string) (params []float64, err error)
 	return
 }
 
-func (app *application) greet() {
+func (app *application) menu() {
 	greet := ` *******************FIGURE AREA CALCULATOR******************
  1 - Square Area
  2 - Rectange Area
